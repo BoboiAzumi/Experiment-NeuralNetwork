@@ -43,7 +43,7 @@ export class IrisSetosaDetect implements NeuralNetwork{
                 outputlayer[0] = this.layer[0].forward(data.x[i])
                 outputlayer[1] = this.layer[1].forward(outputlayer[0])
                 outputbackward[0] = this.layer[1].backward(output[i], this.learning_rate)
-                outputbackward[2] = this.layer[0].backward(outputbackward[0], this.learning_rate, true)
+                outputbackward[1] = this.layer[0].backward(outputbackward[0], this.learning_rate, true)
             }
             /* Testing Model */
             for(let i = 0; i < data.y.length; i++){
