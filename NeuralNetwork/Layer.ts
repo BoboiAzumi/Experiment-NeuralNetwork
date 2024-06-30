@@ -27,7 +27,7 @@ export class Layer{
         for(let i = 0; i < neuron_size; i++){
             let neuron: number[] = []
             for(let j = 0; j < input_size; j++){
-                neuron.push(Math.random())
+                neuron.push(1)
             }
             this.weight.push(neuron)
         }
@@ -46,6 +46,21 @@ export class Layer{
         for(let i = 0; i < this.weight.length; i++){
             console.log(this.weight[i])
         }
+    }
+
+    printIO(){
+        console.log("=============================================================")
+        console.log("Input : ")
+        console.log(this.input)
+        console.log("Weight : ")
+        console.log(this.weight)
+        console.log("Bias : ")
+        console.log(this.bias)
+        console.log("Sum : ")
+        console.log(this.sum)
+        console.log("Output : ")
+        console.log(this.output)
+        console.log("=============================================================")
     }
 
     forward(x: number[]){
@@ -69,7 +84,7 @@ export class Layer{
         let loss_out_gradient: number[] = []
         let derivative_activation = []
         let input_weight_gradient = []
-
+    
         if(is_hidden){
             loss_out_gradient = y
         }
@@ -82,11 +97,11 @@ export class Layer{
         for(let i = 0; i < this.neuron_size; i++){
             derivative_activation.push(this.activation.partial_derivative(this.output[i]))
         }
-
+    
         for(let i = 0; i < this.neuron_size; i++){
             input_weight_gradient.push(this.input)
         }
-
+    
         let old_weight: number[][]= [...this.weight]
         for(let i = 0; i < this.neuron_size; i++){
             for(let j = 0; j < this.input_size; j++){
@@ -94,25 +109,25 @@ export class Layer{
                 this.weight[i][j] = this.weight[i][j] - (learning_rate * loss_weight)
             }
         }
-
+    
         for(let i = 0; i < this.neuron_size; i++){
             let loss_bias = loss_out_gradient[i] * derivative_activation[i] * 1
             this.bias[i] = this.bias[i] - (learning_rate * loss_bias)
         }
-
+    
         let sum_loss_out_gradient = 0
         let sum_derivative_activation = 0
         let sum_input = []
         let sum_old_weight = []
-
+    
         for(let i = 0; i < this.neuron_size; i++){
             sum_loss_out_gradient += loss_out_gradient[i]
         }
-
+    
         for(let i = 0; i < this.neuron_size; i++){
             sum_derivative_activation += derivative_activation[i]
         }
-
+    
         for(let i = 0; i < this.input_size; i++){
             let sum_input_partial = 0
             for(let j = 0; j < this.neuron_size; j++){
@@ -120,7 +135,7 @@ export class Layer{
             }
             sum_input.push(sum_input_partial)
         }
-
+    
         for(let i = 0; i < this.input_size; i++){
             let sum_old_weight_partial = 0
             for(let j = 0; j < this.neuron_size; j++){
@@ -130,11 +145,11 @@ export class Layer{
         }
         
         let loss_out_forward = []
-
+    
         for(let i = 0; i < this.input_size; i++){
             loss_out_forward.push(sum_loss_out_gradient * sum_derivative_activation * sum_input[i] * sum_old_weight[i])
         }
-
+    
         return loss_out_forward
     }
 }
