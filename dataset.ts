@@ -92,6 +92,17 @@ export class Dataset{
         return ((x - min) / (max - min))
     }
 
+    transform(x: number[]){
+        let output: number[] = []
+        if(x.length != this.min.length) throw Error("ERROR TRANSFORM DATASET")
+
+        for(let i = 0; i < x.length; i++){
+            output.push(this.min_max_norm(x[i], this.min[i], this.max[i]))
+        }
+
+        return output
+    }
+
     set_min_max(data: number[][]){
         if(data.length == 0) throw new Error("Length Error")
         this.max = [...data[0]]

@@ -1,6 +1,6 @@
-import type { Activation } from "./Activation/Activation"
+import type { Activation } from "../Activation/Activation"
 import type { Layer } from "./Layer"
-import type { LossFunction } from "./LossFunction/LossFunction"
+import type { LossFunction } from "../LossFunction/LossFunction"
 
 export class DenseLayer implements Layer{
     bias: number[]
