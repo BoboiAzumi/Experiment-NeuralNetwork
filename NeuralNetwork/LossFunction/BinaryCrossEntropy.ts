@@ -3,7 +3,9 @@ import type { LossFunction } from "./LossFunction";
 export class BinaryCrossEntropy implements LossFunction{
     loss(myout: number[], ayout: number[]){
         if(myout.length != ayout.length){
-            throw new Error("Error length MSE")
+            console.log(myout)
+            console.log(ayout)
+            throw new Error("Error length BCE")
         }
         let sum = 0;
         for(let i = 0; i < myout.length; i++){
