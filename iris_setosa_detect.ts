@@ -9,8 +9,8 @@ import type { LossFunction } from "./NeuralNetwork/LossFunction/LossFunction";
 
 
 export class IrisSetosaDetect implements NeuralNetwork{
-    learning_rate: number = 0.8
-    epoch: number = 50
+    learning_rate: number = 0.0175
+    epoch: number = 60
     LossFunc: LossFunction = new BinaryCrossEntropy()
     dataset: Dataset = new Dataset()
     layer: Layer[] = []
@@ -27,8 +27,7 @@ export class IrisSetosaDetect implements NeuralNetwork{
         const sigmoid = new Sigmoid()
         
         this.layer[0] = new DenseLayer(4, 8, relu, this.LossFunc)
-        this.layer[1] = new DenseLayer(8, 4, relu, this.LossFunc)
-        this.layer[2] = new DenseLayer(4, 1, sigmoid, this.LossFunc)
+        this.layer[1] = new DenseLayer(8, 1, sigmoid, this.LossFunc)
     }
 
     train(){
@@ -40,20 +39,16 @@ export class IrisSetosaDetect implements NeuralNetwork{
             let loss = 0
             let accuracy = 0
             /* Training Model */
-            for(let i = 0; i < 10; i++){
+            for(let i = 0; i < data.x.length; i++){
                 outputlayer[0] = this.layer[0].forward(data.x[i])
                 outputlayer[1] = this.layer[1].forward(outputlayer[0])
-                outputlayer[2] = this.layer[2].forward(outputlayer[1])
-                outputbackward[0] = this.layer[2].backward(output[i], this.learning_rate)
-                outputbackward[1] = this.layer[1].backward(outputbackward[0], this.learning_rate, true)
-                outputbackward[2] = this.layer[0].backward(outputbackward[1], this.learning_rate, true)
-                console.log("i : "+i)
+                outputbackward[0] = this.layer[1].backward(output[i], this.learning_rate)
+                outputbackward[1] = this.layer[0].backward(outputbackward[0], this.learning_rate, true)
             }
             /* Testing Model */
             for(let i = 0; i < data.y.length; i++){
                 outputlayer[0] = this.layer[0].forward(data.x[i])
                 outputlayer[1] = this.layer[1].forward(outputlayer[0])
-                outputlayer[2] = this.layer[2].forward(outputlayer[1])
                 loss += this.LossFunc.loss(outputlayer[1], output[i])
                 let eq = (outputlayer[1][0] >= 0.8 ? 1 : 0)
                 accuracy += eq == output[i][0] ? 1 : 0
@@ -74,8 +69,7 @@ export class IrisSetosaDetect implements NeuralNetwork{
         let transform_input = this.dataset.transform(input)
         outputlayer[0] = this.layer[0].forward(transform_input)
         outputlayer[1] = this.layer[1].forward(outputlayer[0])
-        outputlayer[2] = this.layer[2].forward(outputlayer[1])
 
-        return outputlayer[2]
+        return outputlayer[1]
     }
 }

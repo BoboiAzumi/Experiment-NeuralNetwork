@@ -68,7 +68,6 @@ export class DenseLayer implements Layer{
         this.input = x
         this.sum = []
         this.output = []
-
         for(let i = 0; i < this.neuron_size; i++){
             let sum: number = 0
             for(let j = 0; j < this.input_size; j++){
@@ -78,10 +77,6 @@ export class DenseLayer implements Layer{
             this.sum.push(sum)
             this.output.push(this.activation.func(sum))
         }
-
-        console.log("Input : "+x)
-        console.log("Bias : "+this.bias)
-        console.log("Out : "+this.output)
 
         return this.output
     }
