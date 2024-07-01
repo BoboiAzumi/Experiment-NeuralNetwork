@@ -91,12 +91,14 @@ export class DenseLayer implements Layer{
         }
         else{
             for(let i = 0; i < this.neuron_size; i++){
-                loss_out_gradient.push(this.loss_function.partial_derivative(this.output[i], y[i]))
+                let temp = this.loss_function.partial_derivative(this.output[i], y[i])
+                loss_out_gradient.push( !Number.isNaN(temp) ? temp : 0)
             }
         }
         
         for(let i = 0; i < this.neuron_size; i++){
-            derivative_activation.push(this.activation.partial_derivative(this.output[i]))
+            let temp = this.activation.partial_derivative(this.output[i])
+            derivative_activation.push( !Number.isNaN(temp) ? temp : 0)
         }
     
         for(let i = 0; i < this.neuron_size; i++){
@@ -107,13 +109,17 @@ export class DenseLayer implements Layer{
         for(let i = 0; i < this.neuron_size; i++){
             for(let j = 0; j < this.input_size; j++){
                 let loss_weight = loss_out_gradient[i] * derivative_activation[i] * input_weight_gradient[i][j]
-                this.weight[i][j] = this.weight[i][j] - (learning_rate * loss_weight)
+                let temp = this.weight[i][j] - (learning_rate * loss_weight)
+                this.weight[i][j] = !Number.isNaN(temp) ? temp : 0
+                if(Number.isNaN(this.weight[i][j])) throw new Error("NaN Weight")
             }
         }
     
         for(let i = 0; i < this.neuron_size; i++){
             let loss_bias = loss_out_gradient[i] * derivative_activation[i] * 1
-            this.bias[i] = this.bias[i] - (learning_rate * loss_bias)
+            let temp = this.bias[i] - (learning_rate * loss_bias)
+            this.bias[i] = !Number.isNaN(temp) ? temp : 0
+            if(Number.isNaN(this.bias[i])) throw new Error("NaN Bias")
         }
     
         let sum_loss_out_gradient = 0
@@ -122,17 +128,21 @@ export class DenseLayer implements Layer{
         let sum_old_weight = []
     
         for(let i = 0; i < this.neuron_size; i++){
-            sum_loss_out_gradient += loss_out_gradient[i]
+            let temp = loss_out_gradient[i]
+            sum_loss_out_gradient += !Number.isNaN(temp) ? temp : 0
+            
         }
     
         for(let i = 0; i < this.neuron_size; i++){
-            sum_derivative_activation += derivative_activation[i]
+            let temp = derivative_activation[i]
+            sum_derivative_activation += !Number.isNaN(temp) ? temp : 0
         }
     
         for(let i = 0; i < this.input_size; i++){
             let sum_input_partial = 0
             for(let j = 0; j < this.neuron_size; j++){
-                sum_input_partial += input_weight_gradient[j][i]
+                let temp = input_weight_gradient[j][i]
+                sum_input_partial += !Number.isNaN(temp) ? temp : 0
             }
             sum_input.push(sum_input_partial)
         }
@@ -140,7 +150,8 @@ export class DenseLayer implements Layer{
         for(let i = 0; i < this.input_size; i++){
             let sum_old_weight_partial = 0
             for(let j = 0; j < this.neuron_size; j++){
-                sum_old_weight_partial += old_weight[j][i]
+                let temp = old_weight[j][i]
+                sum_old_weight_partial += !Number.isNaN(temp) ? temp : 0
             }
             sum_old_weight.push(sum_old_weight_partial)
         }
@@ -148,7 +159,8 @@ export class DenseLayer implements Layer{
         let loss_out_forward = []
     
         for(let i = 0; i < this.input_size; i++){
-            loss_out_forward.push(sum_loss_out_gradient * sum_derivative_activation * sum_input[i] * sum_old_weight[i])
+            let temp = sum_loss_out_gradient * sum_derivative_activation * sum_input[i] * sum_old_weight[i]
+            loss_out_forward.push(!Number.isNaN(temp) ? temp : 0)
         }
     
         return loss_out_forward

@@ -11,5 +11,9 @@
   },
   "peerDependencies": {
     "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "hono": "^4.4.10",
+    "nodeplotlib": "^1.1.2"
   }
 }

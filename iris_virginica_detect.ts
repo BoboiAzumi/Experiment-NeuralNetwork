@@ -8,9 +8,9 @@ import { Dataset } from "./dataset";
 import type { LossFunction } from "./NeuralNetwork/LossFunction/LossFunction";
 
 
-export class IrisSetosaDetect implements NeuralNetwork{
-    learning_rate: number = 0.0175
-    epoch: number = 120
+export class IrisVirginicaDetect implements NeuralNetwork{
+    learning_rate: number = 0.001
+    epoch: number = 300
     LossFunc: LossFunction = new BinaryCrossEntropy()
     dataset: Dataset = new Dataset()
     layer: Layer[] = []
@@ -29,20 +29,20 @@ export class IrisSetosaDetect implements NeuralNetwork{
         const relu = new ReLu()
         const sigmoid = new Sigmoid()
         
-        this.layer[0] = new DenseLayer(4, 8, relu, this.LossFunc)
-        this.layer[1] = new DenseLayer(8, 1, sigmoid, this.LossFunc)
+        this.layer[0] = new DenseLayer(4, 10, relu, this.LossFunc)
+        this.layer[1] = new DenseLayer(10, 1, sigmoid, this.LossFunc)
     }
 
     train(){
         let outputlayer: number[][] = []
         let outputbackward: number[][] = []
         const data = this.dataset.get()
-        const output = this.dataset.getBinaryLabel(0)
+        const output = this.dataset.getBinaryLabel(2)
         for(let epochs = 0; epochs < this.epoch; epochs++){
             let loss = 0
             let accuracy = 0
             /* Training Model */
-            for(let i = 0; i < data.x.length; i+=2){
+            for(let i = 0; i < data.x.length; i++){
                 outputlayer[0] = this.layer[0].forward(data.x[i])
                 outputlayer[1] = this.layer[1].forward(outputlayer[0])
                 outputbackward[0] = this.layer[1].backward(output[i], this.learning_rate)
@@ -71,7 +71,7 @@ export class IrisSetosaDetect implements NeuralNetwork{
         }
 
         /* Final Testing */
-        for(let i = 0; i < data.y.length; i++){
+        for(let i = 0; i < data.y.length; i+=5){
             outputlayer[0] = this.layer[0].forward(data.x[i])
             outputlayer[1] = this.layer[1].forward(outputlayer[0])
             console.log("")
