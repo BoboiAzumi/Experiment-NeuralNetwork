@@ -10,7 +10,7 @@ import type { LossFunction } from "./NeuralNetwork/LossFunction/LossFunction";
 
 export class IrisSetosaDetect implements NeuralNetwork{
     learning_rate: number = 0.0175
-    epoch: number = 120
+    epoch: number = 75
     LossFunc: LossFunction = new BinaryCrossEntropy()
     dataset: Dataset = new Dataset()
     layer: Layer[] = []
